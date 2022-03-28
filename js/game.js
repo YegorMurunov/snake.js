@@ -4,27 +4,27 @@ let
 	scoreBlock         = document.getElementById('score'),
 	scoreCount         = 0,
 	bestScoreBlock     = document.getElementById('best-score'),
-	dir                = '', // направление змейки
+	dir                = '', // snake direction
 	diff               = 'Easy', // difficulty
 	diffBlock          = document.getElementById('difficulty'),
 	btnChange          = document.getElementById('changeDif');
 
-const config = { // главные настройки
-	sizeCell: 24, // размер ячейки
-	sizeFood: 24, // размер еды
-	step: 0, // для прорисовки кадров
-	stepMax: 7, // чем меньше тем быстрее прорисовка движений змейки
+const config = { // General setting
+	sizeCell: 24,
+	sizeFood: 24,
+	step: 0,
+	stepMax: 7,
 }
 
 const snake = { // настройки змейки
 	x: 24,
 	y: 24,
-	dirX: 0, // направление по оси X
-	dirY: 0, // направление по оси Y
+	dirX: 0, // direction X
+	dirY: 0, // direction Y
 	body: [],
 	maxBodySize: 1,
 }
-const snakeSkins = [ // массив со скинами змеи
+const snakeSkins = [ // array snake skins
 	'./img/snake/head.svg',
 ];
 const snakeImages = [
@@ -34,28 +34,28 @@ for ( let i = 0; i < snakeImages.length; i++ ) {
 	snakeImages[i].src = snakeSkins[i];
 }
 
-const food = { // настройки еды
+const food = { // food settings
 	x: randomInt(0, canvas.width / config.sizeCell) * config.sizeCell,
 	y: randomInt(0, canvas.height / config.sizeCell) * config.sizeCell,
 }
-const images = [ // массив с путем к картинкам
+const images = [ // array with images path
 	'./img/food/apple.svg',
 	'./img/food/carrot.svg',
 	'./img/food/eggplant.svg',
 	'./img/food/banana.svg',
 ];
 let img = new Image();
-img.src = images[0]; // по умолчанию будет первая картинка
+img.src = images[0]; // the default will be the first image
 
-const bomb = { // настройки бомб
-	x: -config.sizeCell, // изначально бомбы не будет видно
+const bomb = { // bomb settings
+	x: -config.sizeCell, // the default bomb will be hidden
 	y: -config.sizeCell,
 };
 const bombImg = new Image();
 bombImg.src = './img/food/bomb.svg';
 
 // аудио
-const audio = [
+const audio = [ // array with audio
 	'./audio/eat.mp3',
 	'./audio/turn.mp3',
 	'./audio/dead.mp3',
@@ -69,13 +69,13 @@ for ( let i = 0; i < audio.length; i++ ) {
 	audioNames[i].src = audio[i];
 }
 
-// настройки канваса по умолчани.
+// canvas settings
 canvas.width = 600;
 canvas.height = 480;
 ctx.fillStyle = '#000000'
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// счет
+// score
 function score() {
 	scoreCount++;
 	bestScore();
@@ -95,7 +95,7 @@ function bestScore() {
 	bestScoreBlock.innerHTML = localStorage.getItem('best score');
 }
 
-// игра
+// game
 function gameLoop() {
 
 	requestAnimationFrame(gameLoop);
@@ -116,15 +116,15 @@ function gameLoop() {
 }
 gameLoop();
 
-// сложности игры, рестарт
-function checkBorder() { // функция выхода за поля
-	// по x
+// difficulty, restart
+function checkBorder() { // A function that checks for going beyond the border
+	// x
 	if ( snake.x < 0 ) {
-		snake.x = canvas.width - config.sizeCell; // - config.sizeCell чтобы сразу была видна змейка
+		snake.x = canvas.width - config.sizeCell;
 	} else if ( snake.x >= canvas.width ) {
 		snake.x = 0;
 	}
-	// по y
+	// y
 	if ( snake.y < 0 ) {
 		snake.y = canvas.height - config.sizeCell;
 	} else if ( snake.y >= canvas.height ) {
@@ -132,7 +132,7 @@ function checkBorder() { // функция выхода за поля
 	}
 }
 
-function withoutBorder() {
+function withoutBorder() { // A function that checks if the snake is touched border
 	if ( snake.x < 0 ) {
 		audioPlay('dead');
 		restart();
@@ -149,7 +149,7 @@ function withoutBorder() {
 	}
 }
 
-function restart() {
+function restart() { // A function restart game
 	config.stepMax = 6;
 	scoreCount = 0;
 	drawScore();
@@ -167,7 +167,7 @@ function restart() {
 }
 
 
-// рисование змейки
+// draw snake
 function drawSnake() {
 	snake.x += snake.dirX;
 	snake.y += snake.dirY;
@@ -175,17 +175,17 @@ function drawSnake() {
 	if (diff === 'Easy') checkBorder();
 	if (diff === 'Hard') withoutBorder();
 
-	// работа с длиной змейки
-	snake.body.unshift({x: snake.x, y: snake.y}); // добовляем объект в тело змейки
-	if ( snake.body.length > snake.maxBodySize ) { // если длина тело больше чем макс то удаляем одну часть
+	// work with snake length
+	snake.body.unshift({x: snake.x, y: snake.y});
+	if ( snake.body.length > snake.maxBodySize ) {
 		snake.body.pop();
 	}
 
 	snake.body.forEach((e, index) => {
 
-		snakeStyles(e, index); // стили змейки
+		snakeStyles(e, index); // snake styles
 
-		if ( e.x == food.x && e.y == food.y ) { // если змейка съела еду
+		if ( e.x == food.x && e.y == food.y ) { // If snake ate food
 			audioPlay('eat');
 			score();
 			randomPosFood();
@@ -196,7 +196,7 @@ function drawSnake() {
 			}
 		}
 
-		// проверка на сопрекасновение змейки с хвостом. Или бомбой если это хард
+		// Checking if the snake has touched the tail or the bomb
 		for ( let i = index + 1; i < snake.body.length; i++ ) {
 			if ( e.x === snake.body[i].x && e.y === snake.body[i].y ) {
 				audioPlay('dead');
@@ -211,12 +211,12 @@ function drawSnake() {
 		}
 	});
 }
-// стили змейки
+// snake styles
 function snakeStyles(e, index) {
-	if ( index === 0 ) { // для первого эелемента тела змейки ( головы ), устанавливаем скин.
+	if ( index === 0 ) { // for the first snake element(head)
 		ctx.drawImage(snakeImages[0], e.x, e.y);
 	}
-	else { // для остальных обычные квадраты
+	else { // other elements
 		ctx.fillStyle = '#093D14';
 		ctx.strokeStyle = '#071510';
 		ctx.lineWidth = 1;
@@ -225,20 +225,20 @@ function snakeStyles(e, index) {
 	}
 }
 
-// рисование еды
+// draw food
 function drawFood() {
 	ctx.drawImage(img, food.x, food.y);
 }
 
-// рисование бомб
+// draw bomb
 function drawBomb() { // функция добовления бомбы
 	ctx.drawImage(bombImg, bomb.x, bomb.y);
 }
 
-// Загрузка лучшего рекорда
+// Load the best score
 document.addEventListener('load', bestScore());
 
-// управление
+// constrols
 document.addEventListener('keydown', (e) => {
 	if ( e.keyCode == 87 || e.keyCode == 38 ) { // W (up) or arrow up
 		if ( dir != 'down' ) {
@@ -275,7 +275,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-// смена сложности
+// change difficulty
 btnChange.addEventListener('click', (e) => {
 	if ( diff === 'Easy' ) {
 		diff = 'Hard';
@@ -289,26 +289,26 @@ btnChange.addEventListener('click', (e) => {
 });
 
 
-// доп функции
+// Additional functions
 function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min) + min);
 }
-function randomImg() { // выбор рандомной картинки
+function randomImg() { // random img ( for food )
 	let imgCount = randomInt(0, images.length);
 	let imgPath = images[imgCount];
 	img.src = imgPath;
 	return img;
 }
 
-function randomPosFood() { // Рандомное появление еды
+function randomPosFood() { // random food position
 	ctx.drawImage(randomImg(), food.x, food.y);
 	food.x = randomInt(0, canvas.width / config.sizeCell) * config.sizeCell;
 	food.y = randomInt(0, canvas.height / config.sizeCell) * config.sizeCell;
 	drawFood();
 }
 
-function randomPosBomb() { // Рандомное появление бомбы
-	let chance = randomInt(1, 5); // шанс на выпод бомбы 1/5
+function randomPosBomb() { // random bomb position
+	let chance = randomInt(1, 5);
 	if ( chance === 3 ) {
 		bomb.x = randomInt(0, canvas.width / config.sizeCell) * config.sizeCell;
 		bomb.y = randomInt(0, canvas.height / config.sizeCell) * config.sizeCell;
@@ -321,7 +321,7 @@ function randomPosBomb() { // Рандомное появление бомбы
 	}
 }
 
-function audioPlay(name) {
+function audioPlay(name) { // play audio
 	if ( name === 'eat' ) {
 		audioNames[0].play();
 	}
