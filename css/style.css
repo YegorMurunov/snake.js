@@ -18,6 +18,7 @@ body {
 	margin: 0 auto;
 }
 .info {
+	width: 600px;
 	justify-self: flex-start;
 	font-family: arial;
 	font-size: 24px;

@@ -59,11 +59,13 @@ const audio = [ // array with audio
 	'./audio/eat.mp3',
 	'./audio/turn.mp3',
 	'./audio/dead.mp3',
+	'./audio/hit.mp3',
 ];
 const audioNames = [
 	audioEat = new Audio(),
 	audioTurn = new Audio(),
 	audioDead = new Audio(),
+	audioHit = new Audio(),
 ];
 for ( let i = 0; i < audio.length; i++ ) {
 	audioNames[i].src = audio[i];
@@ -196,17 +198,30 @@ function drawSnake() {
 			}
 		}
 
-		// Checking if the snake has touched the tail or the bomb
+		if ( diff === 'Hard' ) { // if snake has touched the bomd, reduce the length of the snake
+			if ( e.x === bomb.x && e.y === bomb.y ) {
+				if ( scoreCount >= 2 ) {
+					audioPlay('hit');
+					scoreCount = Math.ceil(scoreCount / 2);
+					snake.maxBodySize = scoreCount + 1;
+					for ( let i = 0; i < snake.maxBodySize; i++ ) {
+						snake.body.pop();
+					}
+					drawScore();
+					randomPosFood();
+					randomPosBomb();
+				} else {
+					audioPlay('dead');
+					restart()
+				}
+			}
+		}
+
+		// Checking if the snake has touched the tail
 		for ( let i = index + 1; i < snake.body.length; i++ ) {
 			if ( e.x === snake.body[i].x && e.y === snake.body[i].y ) {
 				audioPlay('dead');
 				restart();
-			}
-			if ( diff === 'Hard' ) {
-				if ( e.x === bomb.x && e.y === bomb.y ) {
-					audioPlay('dead');
-					restart();
-				}
 			}
 		}
 	});
@@ -330,5 +345,8 @@ function audioPlay(name) { // play audio
 	}
 	if ( name === 'dead' ) {
 		audioNames[2].play();
+	}
+	if ( name === 'hit' ) {
+		audioNames[3].play();
 	}
 }
