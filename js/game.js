@@ -82,6 +82,7 @@ function score() {
 	scoreCount++;
 	bestScore();
 	if ( scoreCount > 15 ) config.stepMax = 5;
+	else if ( scoreCount <= 15 ) config.stepMax = 6;
 	drawScore();
 }
 function drawScore() {
