@@ -16,9 +16,9 @@ const config = { // General setting
 	stepMax: 7,
 }
 
-const snake = { // настройки змейки
-	x: 24,
-	y: 24,
+const snake = { // Snake settings
+	x: config.sizeCell,
+	y: config.sizeCell,
 	dirX: 0, // direction X
 	dirY: 0, // direction Y
 	body: [],
@@ -72,10 +72,49 @@ for ( let i = 0; i < audio.length; i++ ) {
 }
 
 // canvas settings
-canvas.width = 600;
-canvas.height = 480;
-ctx.fillStyle = '#000000'
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+window.addEventListener('load', (e) => {
+	if ( window.innerWidth <= 650 ) {
+		canvas.width = 300;
+		canvas.height = 300;
+		ctx.fillStyle = '#000000'
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		config.sizeCell = 15;
+		config.sizeFood = 15;
+		canvas.style = 'background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAxNSAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiBmaWxsPSJibGFjayIvPgo8Y2lyY2xlIGN4PSI3LjUiIGN5PSI3LjUiIHI9IjIuNSIgZmlsbD0iIzUxNDk0OSIvPgo8L3N2Zz4K");';
+		restart();
+	}
+	else if ( window.innerWidth > 650 ) {
+		canvas.width = 600;
+		canvas.height = 480;
+		ctx.fillStyle = '#000000'
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		config.sizeCell = 24;
+		config.sizeFood = 24;
+		canvas.style = 'background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJibGFjayIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI0IiBmaWxsPSIjNTE0OTQ5Ii8+Cjwvc3ZnPgo=");';
+		restart();
+	}
+});
+// adaptive
+window.addEventListener('resize', (e) => {
+	if ( window.innerWidth <= 650 ) {
+		canvas.width = 300;
+		canvas.height = 300;
+		ctx.fillStyle = '#000000'
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		config.sizeCell = 15;
+		config.sizeFood = 15;
+		canvas.style = 'background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAxNSAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiBmaWxsPSJibGFjayIvPgo8Y2lyY2xlIGN4PSI3LjUiIGN5PSI3LjUiIHI9IjIuNSIgZmlsbD0iIzUxNDk0OSIvPgo8L3N2Zz4K");';
+	}
+	else if ( window.innerWidth > 650 ) {
+		canvas.width = 600;
+		canvas.height = 480;
+		ctx.fillStyle = '#000000'
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		config.sizeCell = 24;
+		config.sizeFood = 24;
+		canvas.style = 'background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJibGFjayIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI0IiBmaWxsPSIjNTE0OTQ5Ii8+Cjwvc3ZnPgo=");';
+	}
+});
 
 // score
 function score() {
@@ -157,8 +196,8 @@ function restart() { // A function restart game
 	scoreCount = 0;
 	drawScore();
 
-	snake.x = 24;
-	snake.y = 24;
+	snake.x = config.sizeCell;
+	snake.y = config.sizeCell;
 	snake.body = [];
 	snake.maxBodySize = 1;
 	snake.dirX = 0;
@@ -230,7 +269,7 @@ function drawSnake() {
 // snake styles
 function snakeStyles(e, index) {
 	if ( index === 0 ) { // for the first snake element(head)
-		ctx.drawImage(snakeImages[0], e.x, e.y);
+		ctx.drawImage(snakeImages[0], e.x, e.y, config.sizeCell, config.sizeCell);
 	}
 	else { // other elements
 		ctx.fillStyle = '#093D14';
@@ -243,53 +282,122 @@ function snakeStyles(e, index) {
 
 // draw food
 function drawFood() {
-	ctx.drawImage(img, food.x, food.y);
+	ctx.drawImage(img, food.x, food.y, config.sizeFood, config.sizeFood);
 }
 
 // draw bomb
 function drawBomb() { // функция добовления бомбы
-	ctx.drawImage(bombImg, bomb.x, bomb.y);
+	ctx.drawImage(bombImg, bomb.x, bomb.y, config.sizeFood, config.sizeFood);
 }
 
 // Load the best score
 document.addEventListener('load', bestScore());
 
 // constrols
+function turnUp() {
+	if ( dir != 'down' ) {
+		audioPlay('turn');
+		dir = 'up';
+		snake.dirY = -config.sizeCell;
+		snake.dirX = 0;
+	}
+}
+function turnLeft() {
+	if ( dir != 'right' ) {
+		audioPlay('turn');
+		dir = 'left';
+		snake.dirX = -config.sizeCell;
+		snake.dirY = 0;
+	}
+}
+function turnDown() {
+	if ( dir != 'up' ) {
+		audioPlay('turn');
+		dir = 'down';
+		snake.dirY = config.sizeCell;
+		snake.dirX = 0;
+	}
+}
+function turnRight() {
+	if ( dir != 'left' ) {
+		audioPlay('turn');
+		dir = 'right';
+		snake.dirX = config.sizeCell;
+		snake.dirY = 0;
+	}
+}
+
 document.addEventListener('keydown', (e) => {
 	if ( e.keyCode == 87 || e.keyCode == 38 ) { // W (up) or arrow up
-		if ( dir != 'down' ) {
-			audioPlay('turn');
-			dir = 'up';
-			snake.dirY = -config.sizeCell;
-			snake.dirX = 0;
-		}
+		turnUp();
 	}
 	else if ( e.keyCode == 65 || e.keyCode == 37 ) { // A (left) or arrow left
-		if ( dir != 'right' ) {
-			audioPlay('turn');
-			dir = 'left';
-			snake.dirX = -config.sizeCell;
-			snake.dirY = 0;
-		}
+		turnLeft();
 	}
 	else if ( e.keyCode == 83 || e.keyCode == 40 ) { // S (down) or arrow down
-		if ( dir != 'up' ) {
-			audioPlay('turn');
-			dir = 'down';
-			snake.dirY = config.sizeCell;
-			snake.dirX = 0;
-		}
+		turnDown();
 	}
 	else if ( e.keyCode == 68 || e.keyCode == 39 ) { // D (right) or arrow right
-		if ( dir != 'left' ) {
-			audioPlay('turn');
-			dir = 'right';
-			snake.dirX = config.sizeCell;
-			snake.dirY = 0;
-		}
+		turnRight();
 	}
 });
 
+// touch
+const isMobile = {
+	Android: function() {
+		return navigator.userAgent.match(/Android/i);
+	},
+	BlackBerry: function() {
+		return navigator.userAgent.match(/BlackBerry/i);
+	},
+	iOS: function() {
+		return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	},
+	Opera: function() {
+		return navigator.userAgent.match(/Opera Mini/i);
+	},
+	Windows: function() {
+		return navigator.userAgent.match(/IEMobile/i);
+	},
+	any: function() {
+		return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	}
+};
+
+if ( isMobile.any() ) {
+	alert('Please click any where for play game sounds');
+
+	document.addEventListener('touchstart', handleTouchStart);
+	document.addEventListener('touchmove', handleTouchMove);
+
+	let x1 = null;
+	let y1 = null;
+
+	function handleTouchStart(event) {
+		const firstTouch = event.touches[0];
+		x1 = firstTouch.clientX;
+		y1 = firstTouch.clientY;
+	}
+	function handleTouchMove(event) {
+		if ( !x1 || !y1 ) return false; // check swipe
+		let x2 = event.touches[0].clientX;
+		let y2 = event.touches[0].clientY;
+
+		let xDiff = x2 - x1;
+		let yDiff = y2 - y1;
+
+		if ( Math.abs(xDiff) > Math.abs(yDiff) ) {
+			// swipe left or right
+			xDiff > 0 ? turnRight() : turnLeft();
+		} else {
+			// swipe up or down
+			yDiff < 0 ? turnUp() : turnDown();
+		}
+
+		x1 = null;
+		y1 = null;
+	}
+}
 
 // change difficulty
 btnChange.addEventListener('click', (e) => {
@@ -317,7 +425,7 @@ function randomImg() { // random img ( for food )
 }
 
 function randomPosFood() { // random food position
-	ctx.drawImage(randomImg(), food.x, food.y);
+	ctx.drawImage(randomImg(), food.x, food.y, config.sizeFood, config.sizeFood);
 	food.x = randomInt(0, canvas.width / config.sizeCell) * config.sizeCell;
 	food.y = randomInt(0, canvas.height / config.sizeCell) * config.sizeCell;
 	drawFood();
