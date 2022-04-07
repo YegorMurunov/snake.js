@@ -5,6 +5,7 @@
 body {
 	background-color: #4b4d4c;
 	color: #fff;
+	overflow: hidden;
 }
 
 #wrapper {
