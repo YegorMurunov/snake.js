@@ -1,6 +1,6 @@
 # Snake Game
 ### 27.03.2022
-##### [Author: Yegor Murunov](https://yegormurunov.gq)
+##### [Author: Yegor Murunov](https://github.com/YegorMurunov)
 
 A popular game snake, writen in javascript. Works both on PC and on touch screens (using swipes). With additional features.
 
@@ -13,6 +13,5 @@ A popular game snake, writen in javascript. Works both on PC and on touch screen
 - Stores the best record in localStorage.
 - Set of music from google snake and minecraft.
 
-[Play](https://yegormurunov.github.io/snake.js/)
-
-[Author: Yegor Murunov](https://yegormurunov.gq)
+[Play](https://github.com/YegorMurunov)
+[Author: Yegor Murunov](https://github.com/YegorMurunov)
