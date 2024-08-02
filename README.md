@@ -14,4 +14,5 @@ A popular game snake, writen in javascript. Works both on PC and on touch screen
 - Set of music from google snake and minecraft.
 
 [Play](https://yegormurunov.github.io/snake.js/)
+
 [Author: Yegor Murunov](https://github.com/YegorMurunov)
